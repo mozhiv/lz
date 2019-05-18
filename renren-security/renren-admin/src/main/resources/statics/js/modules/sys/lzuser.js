@@ -3,8 +3,8 @@ $(function () {
         url: baseURL + 'sys/lzuser/list',
         datatype: "json",
         colModel: [			
-			{ label: 'userId', name: 'userId', index: 'user_id', width: 50, key: true },
-			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 }, 			
+			{ label: 'userId', name: 'userId', index: 'user_id', width: 50, key: true, hidden: true },
+			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 },
 			{ label: '用户名', name: 'username', index: 'username', width: 80 }, 			
 			{ label: '手机号', name: 'mobile', index: 'mobile', width: 80 }, 			
 			{ label: '余额', name: 'money', index: 'money', width: 80 },
