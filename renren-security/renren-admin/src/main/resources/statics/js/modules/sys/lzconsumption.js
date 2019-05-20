@@ -1,34 +1,12 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/lzuser/list',
+        url: baseURL + 'sys/lzconsumption/list',
         datatype: "json",
         colModel: [			
-			{ label: 'userId', name: 'userId', index: 'user_id', width: 50, key: true, hidden: true },
-			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 },
-			{ label: '用户名', name: 'username', index: 'username', width: 80 }, 			
-			{ label: '手机号', name: 'mobile', index: 'mobile', width: 80 }, 			
-			{ label: '余额', name: 'money', index: 'money', width: 80 },
-			{ label: '状态', name: 'status', index: 'status', width: 80, formatter: function(value, options, row){
-                return value === 0 ?
-                    '<span class="label label-danger">禁用</span>' :
-                    '<span class="label label-success">正常</span>';
-            }},
-			{ label: '发卡时间', name: 'createTime', index: 'create_time', width: 80 },
-			{ label: '洗车次数', name: 'washTimes', index: 'wash_times', width: 80 , formatter: function(value, options, row){
-                return value === 0 ?
-                    '<span class="label label-danger">剩余'+ value +'次</span>' :
-                    '<span class="label label-success">剩余'+ value +'次</span>';
-            }},
-			{ label: '打蜡次数', name: 'waxTimes', index: 'wax_times', width: 80, formatter: function(value, options, row){
-                return value === 0 ?
-                    '<span class="label label-danger">剩余'+ value +'次</span>' :
-                    '<span class="label label-success">剩余'+ value +'次</span>';
-            } },
-			{ label: '性别', name: 'sex', index: 'sex', width: 80,  formatter: function(value, options, row){
-                return value === 0 ?
-                    '女' :
-                    '男';
-            }}
+			{ label: 'consumptionId', name: 'consumptionId', index: 'consumption_id', width: 50, key: true,hidden: true },
+			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 }, 			
+			{ label: '消费金额', name: 'money', index: 'money', width: 80 }, 			
+			{ label: '消费时间', name: 'dateTime', index: 'date_time', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
@@ -60,44 +38,37 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
-	    lzUserSearch:{
-	        cardNumber: null
-        },
 		showList: true,
-        addUser: false,
-        addMoney: false,
 		title: null,
-		lzUser: {}
+		lzConsumption: {}
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
 		add: function(){
-            vm.showList = false;
-			vm.addUser = true;
-			vm.title = "添加会员";
-			vm.lzUser = {};
+			vm.showList = false;
+			vm.title = "新增";
+			vm.lzConsumption = {};
 		},
 		update: function (event) {
-			var userId = getSelectedRow();
-			if(userId == null){
+			var consumptionId = getSelectedRow();
+			if(consumptionId == null){
 				return ;
 			}
 			vm.showList = false;
-            vm.addUser = false;
-            vm.title = "修改会员";
+            vm.title = "修改";
             
-            vm.getInfo(userId)
+            vm.getInfo(consumptionId)
 		},
 		saveOrUpdate: function (event) {
 		    $('#btnSaveOrUpdate').button('loading').delay(1000).queue(function() {
-                var url = vm.lzUser.userId == null ? "sys/lzuser/save" : "sys/lzuser/update";
+                var url = vm.lzConsumption.consumptionId == null ? "sys/lzconsumption/save" : "sys/lzconsumption/update";
                 $.ajax({
                     type: "POST",
                     url: baseURL + url,
                     contentType: "application/json",
-                    data: JSON.stringify(vm.lzUser),
+                    data: JSON.stringify(vm.lzConsumption),
                     success: function(r){
                         if(r.code === 0){
                              layer.msg("操作成功", {icon: 1});
@@ -114,8 +85,8 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var userIds = getSelectedRows();
-			if(userIds == null){
+			var consumptionIds = getSelectedRows();
+			if(consumptionIds == null){
 				return ;
 			}
 			var lock = false;
@@ -126,9 +97,9 @@ var vm = new Vue({
                     lock = true;
 		            $.ajax({
                         type: "POST",
-                        url: baseURL + "sys/lzuser/delete",
+                        url: baseURL + "sys/lzconsumption/delete",
                         contentType: "application/json",
-                        data: JSON.stringify(userIds),
+                        data: JSON.stringify(consumptionIds),
                         success: function(r){
                             if(r.code == 0){
                                 layer.msg("操作成功", {icon: 1});
@@ -142,16 +113,15 @@ var vm = new Vue({
              }, function(){
              });
 		},
-		getInfo: function(userId){
-			$.get(baseURL + "sys/lzuser/info/"+userId, function(r){
-                vm.lzUser = r.lzUser;
+		getInfo: function(consumptionId){
+			$.get(baseURL + "sys/lzconsumption/info/"+consumptionId, function(r){
+                vm.lzConsumption = r.lzConsumption;
             });
 		},
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'cardNumber': vm.lzUserSearch.cardNumber},
+			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page
             }).trigger("reloadGrid");
 		}
