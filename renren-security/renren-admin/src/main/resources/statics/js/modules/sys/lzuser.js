@@ -61,8 +61,9 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 	    lzUserSearch:{
-	        cardNumber: null
+	        cardNumber: null,
         },
+        rechargeMoney: 0,
 		showList: true,
         addUser: false,
         addMoney: false,
@@ -76,6 +77,7 @@ var vm = new Vue({
 		add: function(){
             vm.showList = false;
 			vm.addUser = true;
+			vm.addMoney = false;
 			vm.title = "添加会员";
 			vm.lzUser = {};
 		},
@@ -113,6 +115,9 @@ var vm = new Vue({
                 });
 			});
 		},
+        recharge: function (event) {
+            
+        },
 		del: function (event) {
 			var userIds = getSelectedRows();
 			if(userIds == null){
@@ -147,6 +152,17 @@ var vm = new Vue({
                 vm.lzUser = r.lzUser;
             });
 		},
+        charge: function(){
+            var userId = getSelectedRow();
+            if(userId == null){
+                return ;
+            }
+            //alert(userId);
+            vm.showList = true;
+            vm.addMoney = true;
+            vm.title = "会员充值";
+            vm.getInfo(userId)
+        },
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
