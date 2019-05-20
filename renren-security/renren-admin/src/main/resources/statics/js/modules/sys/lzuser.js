@@ -158,6 +158,8 @@ var vm = new Vue({
                 return ;
             }
             //alert(userId);
+            $("#openDialog").trigger("click");
+            vm.rechargeMoney = 0;
             vm.showList = true;
             vm.addMoney = true;
             vm.title = "会员充值";
