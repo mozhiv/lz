@@ -130,7 +130,7 @@ var vm = new Vue({
                     data: JSON.stringify(vm.lzRecharge),
                     success: function(r){
                         if(r.code === 0){
-                            layer.msg("操作成功", {icon: 1});
+                            layer.msg("充值成功", {icon: 1});
                             vm.reload();
                             $('#btnRecharge').button('reset');
                             $('#btnRecharge').dequeue();
