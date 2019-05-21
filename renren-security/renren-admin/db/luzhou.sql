@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2019-05-18 16:50:08
+Date: 2019-05-21 16:34:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,13 +23,41 @@ CREATE TABLE `lz_consumption` (
   `consumption_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '消费ID',
   `card_number` bigint(20) NOT NULL COMMENT '卡号',
   `money` float(5,2) NOT NULL COMMENT '消费金额',
-  `date_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '消费时间',
-  PRIMARY KEY (`consumption_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '消费时间',
+  PRIMARY KEY (`consumption_id`),
+  KEY `card_number` (`card_number`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of lz_consumption
 -- ----------------------------
+INSERT INTO `lz_consumption` VALUES ('1', '621354351', '200.00', '2019-05-20 15:25:42');
+
+-- ----------------------------
+-- Table structure for lz_recharge_record
+-- ----------------------------
+DROP TABLE IF EXISTS `lz_recharge_record`;
+CREATE TABLE `lz_recharge_record` (
+  `recharge_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '充值记录',
+  `card_number` bigint(20) NOT NULL COMMENT '会员卡号',
+  `money` float(20,2) NOT NULL COMMENT '充值金额',
+  `recharge_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '充值时间',
+  PRIMARY KEY (`recharge_id`),
+  KEY `card_number` (`card_number`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of lz_recharge_record
+-- ----------------------------
+INSERT INTO `lz_recharge_record` VALUES ('1', '621354351', '300.00', '2019-05-20 15:25:52');
+INSERT INTO `lz_recharge_record` VALUES ('2', '888888888', '200.00', '2019-05-21 14:02:07');
+INSERT INTO `lz_recharge_record` VALUES ('7', '888888888', '200.00', '2019-05-21 14:30:19');
+INSERT INTO `lz_recharge_record` VALUES ('8', '888888888', '500.00', '2019-05-21 14:33:04');
+INSERT INTO `lz_recharge_record` VALUES ('9', '888888888', '200.00', '2019-05-21 16:04:03');
+INSERT INTO `lz_recharge_record` VALUES ('10', '777777777', '500.00', '2019-05-21 16:17:20');
+INSERT INTO `lz_recharge_record` VALUES ('11', '123456789', '50.00', '2019-05-21 16:17:36');
+INSERT INTO `lz_recharge_record` VALUES ('12', '985461354', '100.00', '2019-05-21 16:17:42');
+INSERT INTO `lz_recharge_record` VALUES ('13', '845162356', '30.00', '2019-05-21 16:17:48');
 
 -- ----------------------------
 -- Table structure for lz_user
@@ -40,21 +68,29 @@ CREATE TABLE `lz_user` (
   `card_number` bigint(20) NOT NULL COMMENT '卡号',
   `username` varchar(50) NOT NULL COMMENT '用户名',
   `mobile` varchar(100) DEFAULT NULL COMMENT '手机号',
+  `car_number` varchar(20) NOT NULL COMMENT '车牌号',
   `money` float(20,2) NOT NULL DEFAULT '0.00',
   `status` tinyint(4) DEFAULT '1' COMMENT '状态  0：禁用   1：正常',
-  `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `wash_times` int(3) NOT NULL COMMENT '洗车次数',
   `wax_times` int(3) NOT NULL COMMENT '打蜡次数',
   `sex` int(1) NOT NULL DEFAULT '1' COMMENT '性别，默认''男''  0: ''女'' 1: ''男''',
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='开卡用户';
+  UNIQUE KEY `card_number` (`card_number`) USING BTREE,
+  UNIQUE KEY `mobile` (`mobile`) USING BTREE,
+  KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='开卡用户';
 
 -- ----------------------------
 -- Records of lz_user
 -- ----------------------------
-INSERT INTO `lz_user` VALUES ('2', '621354351', '卢周', '13299546618', '2000.00', '1', '2019-05-18 16:04:27', '10', '1', '1');
-INSERT INTO `lz_user` VALUES ('3', '666666666', 'zhiv', '13955648878', '1000.00', '1', '2019-05-18 16:17:12', '15', '2', '1');
+INSERT INTO `lz_user` VALUES ('2', '621354351', '卢周', '13299546618', '粤A12345', '2000.00', '1', '2019-05-18 16:04:27', '20', '2', '1');
+INSERT INTO `lz_user` VALUES ('3', '666666666', 'zhiv', '13955648878', '粤F31231', '9999.00', '1', '2019-05-18 16:17:12', '15', '2', '1');
+INSERT INTO `lz_user` VALUES ('4', '888888888', 'goushi', '18956425815', '粤B56814', '200.00', '1', '2019-05-20 17:16:54', '12', '1', '1');
+INSERT INTO `lz_user` VALUES ('5', '777777777', '叼你老鼠', '15622856645', '桂AG6103', '500.00', '1', '2019-05-20 17:22:45', '13', '5', '1');
+INSERT INTO `lz_user` VALUES ('6', '123456789', '这是个测试号', '13246528888', '粤K88888', '50.00', '1', '2019-05-20 17:41:18', '10', '1', '0');
+INSERT INTO `lz_user` VALUES ('7', '985461354', '第二个测试号', '18845236514', '粤S99C58', '100.00', '1', '2019-05-20 17:43:02', '12', '1', '0');
+INSERT INTO `lz_user` VALUES ('8', '845162356', '人人', '15946258879', '粤S77531', '30.00', '1', '2019-05-21 13:36:29', '8', '1', '1');
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
@@ -209,7 +245,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('RenrenScheduler', 'PC-20190404PYOH1558166466621', '1558169408237', '15000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('RenrenScheduler', 'PC-20190404PYOH1558426451255', '1558427652852', '15000');
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -297,22 +333,7 @@ CREATE TABLE `qrtz_triggers` (
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
-INSERT INTO `qrtz_triggers` VALUES ('RenrenScheduler', 'TASK_1', 'DEFAULT', 'TASK_1', 'DEFAULT', null, '1558170000000', '1558168200000', '5', 'WAITING', 'CRON', '1558164245000', '0', null, '2', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000D4A4F425F504152414D5F4B45597372002E696F2E72656E72656E2E6D6F64756C65732E6A6F622E656E746974792E5363686564756C654A6F62456E7469747900000000000000010200074C00086265616E4E616D657400124C6A6176612F6C616E672F537472696E673B4C000A63726561746554696D657400104C6A6176612F7574696C2F446174653B4C000E63726F6E45787072657373696F6E71007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C0006706172616D7371007E00094C000672656D61726B71007E00094C00067374617475737400134C6A6176612F6C616E672F496E74656765723B7870740008746573745461736B7372000E6A6176612E7574696C2E44617465686A81014B597419030000787077080000016AC9D2BEE87874000E3020302F3330202A202A202A203F7372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B0200007870000000000000000174000672656E72656E74000CE58F82E695B0E6B58BE8AF95737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C75657871007E0013000000007800);
-
--- ----------------------------
--- Table structure for recharge_record
--- ----------------------------
-DROP TABLE IF EXISTS `recharge_record`;
-CREATE TABLE `recharge_record` (
-  `recharge_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '充值记录',
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `money` float(20,2) NOT NULL COMMENT '充值金额',
-  PRIMARY KEY (`recharge_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of recharge_record
--- ----------------------------
+INSERT INTO `qrtz_triggers` VALUES ('RenrenScheduler', 'TASK_1', 'DEFAULT', 'TASK_1', 'DEFAULT', null, '1558429200000', '1558427400000', '5', 'WAITING', 'CRON', '1558164245000', '0', null, '2', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000D4A4F425F504152414D5F4B45597372002E696F2E72656E72656E2E6D6F64756C65732E6A6F622E656E746974792E5363686564756C654A6F62456E7469747900000000000000010200074C00086265616E4E616D657400124C6A6176612F6C616E672F537472696E673B4C000A63726561746554696D657400104C6A6176612F7574696C2F446174653B4C000E63726F6E45787072657373696F6E71007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C0006706172616D7371007E00094C000672656D61726B71007E00094C00067374617475737400134C6A6176612F6C616E672F496E74656765723B7870740008746573745461736B7372000E6A6176612E7574696C2E44617465686A81014B597419030000787077080000016AC9D2BEE87874000E3020302F3330202A202A202A203F7372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B0200007870000000000000000174000672656E72656E74000CE58F82E695B0E6B58BE8AF95737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C75657871007E0013000000007800);
 
 -- ----------------------------
 -- Table structure for schedule_job
@@ -349,13 +370,42 @@ CREATE TABLE `schedule_job_log` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`log_id`),
   KEY `job_id` (`job_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='定时任务日志';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='定时任务日志';
 
 -- ----------------------------
 -- Records of schedule_job_log
 -- ----------------------------
 INSERT INTO `schedule_job_log` VALUES ('1', '1', 'testTask', 'renren', '0', null, '1', '2019-05-18 15:30:00');
 INSERT INTO `schedule_job_log` VALUES ('2', '1', 'testTask', 'renren', '0', null, '1', '2019-05-18 16:30:00');
+INSERT INTO `schedule_job_log` VALUES ('3', '1', 'testTask', 'renren', '0', null, '1', '2019-05-18 17:00:00');
+INSERT INTO `schedule_job_log` VALUES ('4', '1', 'testTask', 'renren', '0', null, '281246', '2019-05-18 17:30:00');
+INSERT INTO `schedule_job_log` VALUES ('5', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 15:00:00');
+INSERT INTO `schedule_job_log` VALUES ('6', '1', 'testTask', 'renren', '0', null, '0', '2019-05-20 15:30:00');
+INSERT INTO `schedule_job_log` VALUES ('7', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 16:00:00');
+INSERT INTO `schedule_job_log` VALUES ('8', '1', 'testTask', 'renren', '0', null, '2', '2019-05-20 16:30:00');
+INSERT INTO `schedule_job_log` VALUES ('9', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 17:00:00');
+INSERT INTO `schedule_job_log` VALUES ('10', '1', 'testTask', 'renren', '0', null, '2', '2019-05-20 17:30:00');
+INSERT INTO `schedule_job_log` VALUES ('11', '1', 'testTask', 'renren', '0', null, '2', '2019-05-20 18:00:00');
+INSERT INTO `schedule_job_log` VALUES ('12', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 18:30:00');
+INSERT INTO `schedule_job_log` VALUES ('13', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 19:00:00');
+INSERT INTO `schedule_job_log` VALUES ('14', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 19:30:00');
+INSERT INTO `schedule_job_log` VALUES ('15', '1', 'testTask', 'renren', '0', null, '2', '2019-05-20 20:00:00');
+INSERT INTO `schedule_job_log` VALUES ('16', '1', 'testTask', 'renren', '0', null, '1', '2019-05-20 20:30:00');
+INSERT INTO `schedule_job_log` VALUES ('17', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 09:00:00');
+INSERT INTO `schedule_job_log` VALUES ('18', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 09:30:00');
+INSERT INTO `schedule_job_log` VALUES ('19', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 10:00:00');
+INSERT INTO `schedule_job_log` VALUES ('20', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 10:30:00');
+INSERT INTO `schedule_job_log` VALUES ('21', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 11:00:00');
+INSERT INTO `schedule_job_log` VALUES ('22', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 11:30:00');
+INSERT INTO `schedule_job_log` VALUES ('23', '1', 'testTask', 'renren', '0', null, '2', '2019-05-21 12:00:00');
+INSERT INTO `schedule_job_log` VALUES ('24', '1', 'testTask', 'renren', '0', null, '2', '2019-05-21 12:30:00');
+INSERT INTO `schedule_job_log` VALUES ('25', '1', 'testTask', 'renren', '0', null, '2', '2019-05-21 13:00:00');
+INSERT INTO `schedule_job_log` VALUES ('26', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 13:30:00');
+INSERT INTO `schedule_job_log` VALUES ('27', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 14:00:00');
+INSERT INTO `schedule_job_log` VALUES ('28', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 14:30:00');
+INSERT INTO `schedule_job_log` VALUES ('29', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 15:00:00');
+INSERT INTO `schedule_job_log` VALUES ('30', '1', 'testTask', 'renren', '0', null, '0', '2019-05-21 16:00:00');
+INSERT INTO `schedule_job_log` VALUES ('31', '1', 'testTask', 'renren', '0', null, '1', '2019-05-21 16:30:00');
 
 -- ----------------------------
 -- Table structure for sys_config
@@ -436,11 +486,21 @@ CREATE TABLE `sys_log` (
   `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='系统日志';
 
 -- ----------------------------
 -- Records of sys_log
 -- ----------------------------
+INSERT INTO `sys_log` VALUES ('1', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":41,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"会员管理\",\"url\":\"modules/sys/lzuser.html\",\"type\":1,\"icon\":\"address-book\",\"orderNum\":6}', '6', '0:0:0:0:0:0:0:1', '2019-05-20 14:32:24');
+INSERT INTO `sys_log` VALUES ('2', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":41,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"会员管理\",\"url\":\"modules/sys/lzuser.html\",\"type\":1,\"icon\":\"fa fa-address-book\",\"orderNum\":6}', '7', '0:0:0:0:0:0:0:1', '2019-05-20 14:33:11');
+INSERT INTO `sys_log` VALUES ('3', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":41,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"会员管理\",\"url\":\"modules/sys/lzuser.html\",\"type\":1,\"icon\":\"fa fa-user-circle\",\"orderNum\":6}', '7', '0:0:0:0:0:0:0:1', '2019-05-20 14:39:38');
+INSERT INTO `sys_log` VALUES ('4', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":46,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"消费记录\",\"url\":\"modules/sys/lzconsumption.html\",\"type\":1,\"icon\":\"fa fa-file-code-o\",\"orderNum\":6}', '9', '0:0:0:0:0:0:0:1', '2019-05-20 15:19:08');
+INSERT INTO `sys_log` VALUES ('5', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":51,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"充值记录\",\"url\":\"modules/sys/lzrechargerecord.html\",\"type\":1,\"icon\":\"fa fa-file-code-o\",\"orderNum\":6}', '6', '0:0:0:0:0:0:0:1', '2019-05-20 15:19:24');
+INSERT INTO `sys_log` VALUES ('6', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":46,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"消费记录\",\"url\":\"modules/sys/lzconsumption.html\",\"type\":1,\"icon\":\"fa fa-credit-card\",\"orderNum\":6}', '3', '0:0:0:0:0:0:0:1', '2019-05-20 15:20:47');
+INSERT INTO `sys_log` VALUES ('7', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":51,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"充值记录\",\"url\":\"modules/sys/lzrechargerecord.html\",\"type\":1,\"icon\":\"fa fa-bars\",\"orderNum\":6}', '9', '0:0:0:0:0:0:0:1', '2019-05-20 15:22:09');
+INSERT INTO `sys_log` VALUES ('8', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":41,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"会员管理\",\"url\":\"modules/sys/lzuser.html\",\"type\":1,\"icon\":\"fa fa-user-circle\",\"orderNum\":1}', '7', '0:0:0:0:0:0:0:1', '2019-05-20 15:39:13');
+INSERT INTO `sys_log` VALUES ('9', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":46,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"消费记录\",\"url\":\"modules/sys/lzconsumption.html\",\"type\":1,\"icon\":\"fa fa-credit-card\",\"orderNum\":1}', '6', '0:0:0:0:0:0:0:1', '2019-05-20 15:39:35');
+INSERT INTO `sys_log` VALUES ('10', 'admin', '修改菜单', 'io.renren.modules.sys.controller.SysMenuController.update()', '{\"menuId\":51,\"parentId\":1,\"parentName\":\"系统管理\",\"name\":\"充值记录\",\"url\":\"modules/sys/lzrechargerecord.html\",\"type\":1,\"icon\":\"fa fa-bars\",\"orderNum\":1}', '6', '0:0:0:0:0:0:0:1', '2019-05-20 15:39:54');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -456,7 +516,7 @@ CREATE TABLE `sys_menu` (
   `icon` varchar(50) DEFAULT NULL COMMENT '菜单图标',
   `order_num` int(11) DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -500,11 +560,21 @@ INSERT INTO `sys_menu` VALUES ('37', '36', '查看', null, 'sys:dict:list,sys:di
 INSERT INTO `sys_menu` VALUES ('38', '36', '新增', null, 'sys:dict:save', '2', null, '6');
 INSERT INTO `sys_menu` VALUES ('39', '36', '修改', null, 'sys:dict:update', '2', null, '6');
 INSERT INTO `sys_menu` VALUES ('40', '36', '删除', null, 'sys:dict:delete', '2', null, '6');
-INSERT INTO `sys_menu` VALUES ('41', '1', 'VIP管理', 'modules/sys/lzuser.html', null, '1', 'fa fa-file-code-o', '6');
+INSERT INTO `sys_menu` VALUES ('41', '1', '会员管理', 'modules/sys/lzuser.html', null, '1', 'fa fa-user-circle', '1');
 INSERT INTO `sys_menu` VALUES ('42', '41', '查看', null, 'sys:lzuser:list,sys:lzuser:info', '2', null, '6');
 INSERT INTO `sys_menu` VALUES ('43', '41', '新增', null, 'sys:lzuser:save', '2', null, '6');
 INSERT INTO `sys_menu` VALUES ('44', '41', '修改', null, 'sys:lzuser:update', '2', null, '6');
 INSERT INTO `sys_menu` VALUES ('45', '41', '删除', null, 'sys:lzuser:delete', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('46', '1', '消费记录', 'modules/sys/lzconsumption.html', null, '1', 'fa fa-credit-card', '1');
+INSERT INTO `sys_menu` VALUES ('47', '46', '查看', null, 'sys:lzconsumption:list,sys:lzconsumption:info', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('48', '46', '新增', null, 'sys:lzconsumption:save', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('49', '46', '修改', null, 'sys:lzconsumption:update', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('50', '46', '删除', null, 'sys:lzconsumption:delete', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('51', '1', '充值记录', 'modules/sys/lzrechargerecord.html', null, '1', 'fa fa-bars', '1');
+INSERT INTO `sys_menu` VALUES ('52', '51', '查看', null, 'sys:lzrechargerecord:list,sys:lzrechargerecord:info', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('53', '51', '新增', null, 'sys:lzrechargerecord:save', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('54', '51', '修改', null, 'sys:lzrechargerecord:update', '2', null, '6');
+INSERT INTO `sys_menu` VALUES ('55', '51', '删除', null, 'sys:lzrechargerecord:delete', '2', null, '6');
 
 -- ----------------------------
 -- Table structure for sys_oss
