@@ -9,6 +9,7 @@
         <result property="cardNumber" column="card_number"/>
         <result property="username" column="username"/>
         <result property="mobile" column="mobile"/>
+        <result property="carNumber" column="car_number"/>
         <result property="money" column="money"/>
         <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>

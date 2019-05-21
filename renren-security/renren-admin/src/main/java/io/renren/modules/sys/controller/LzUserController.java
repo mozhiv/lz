@@ -9,7 +9,6 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Map;
 
 
@@ -75,13 +74,13 @@ public class LzUserController {
 
     /**
      * 删除
-     */
+     *//*
     @RequestMapping("/delete")
     @RequiresPermissions("sys:lzuser:delete")
     public R delete(@RequestBody Long[] userIds){
         lzUserService.removeByIds(Arrays.asList(userIds));
 
         return R.ok();
-    }
+    }*/
 
 }

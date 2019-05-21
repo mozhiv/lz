@@ -6,7 +6,8 @@ $(function () {
 			{ label: 'userId', name: 'userId', index: 'user_id', width: 50, key: true, hidden: true },
 			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 },
 			{ label: '用户名', name: 'username', index: 'username', width: 80 }, 			
-			{ label: '手机号', name: 'mobile', index: 'mobile', width: 80 }, 			
+			{ label: '手机号', name: 'mobile', index: 'mobile', width: 80 },
+            { label: '车牌号', name: 'carNumber', index: 'car_number', width: 80 },
 			{ label: '余额', name: 'money', index: 'money', width: 80 },
 			{ label: '状态', name: 'status', index: 'status', width: 80, formatter: function(value, options, row){
                 return value === 0 ?
@@ -68,7 +69,8 @@ var vm = new Vue({
         addUser: false,
         addMoney: false,
 		title: null,
-		lzUser: {}
+		lzUser: {},
+        lzRecharge: {}
 	},
 	methods: {
 		query: function () {
@@ -116,7 +118,31 @@ var vm = new Vue({
 			});
 		},
         recharge: function (event) {
-            
+            $('#btnRecharge').button('loading').delay(1000).queue(function() {
+                var url = vm.lzUser.userId == null ? "" : "sys/lzrechargerecord/save";
+                //console.log(vm.lzUser.userId);
+                vm.lzRecharge.cardNumber = vm.lzUser.cardNumber;
+                vm.lzRecharge.money = vm.rechargeMoney;
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.lzRecharge),
+                    success: function(r){
+                        if(r.code === 0){
+                            layer.msg("操作成功", {icon: 1});
+                            vm.reload();
+                            $('#btnRecharge').button('reset');
+                            $('#btnRecharge').dequeue();
+                            $('#exampleModal').modal('hide');
+                        }else{
+                            layer.alert(r.msg);
+                            $('#btnRecharge').button('reset');
+                            $('#btnRecharge').dequeue();
+                        }
+                    }
+                });
+            });
         },
 		del: function (event) {
 			var userIds = getSelectedRows();
@@ -159,11 +185,17 @@ var vm = new Vue({
             }
             //alert(userId);
             $("#openDialog").trigger("click");
-            vm.rechargeMoney = 0;
+            //vm.rechargeMoney = 0;
             vm.showList = true;
             vm.addMoney = true;
             vm.title = "会员充值";
-            vm.getInfo(userId)
+            vm.getInfo(userId);
+            $('#exampleModal').on('hidden.bs.modal', function (e) {
+                // do something...
+                //alert("模态框关闭了");
+                // 模态框关闭后对数据进行初始化
+                vm.rechargeMoney = 0;
+            })
         },
 		reload: function (event) {
 			vm.showList = true;

@@ -37,6 +37,10 @@ public class LzUserEntity implements Serializable {
 	 */
 	private String mobile;
 	/**
+	 * 车牌号
+	 */
+	private String carNumber;
+	/**
 	 * 
 	 */
 	private Float money;
