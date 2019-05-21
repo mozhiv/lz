@@ -70,6 +70,7 @@ public class LzConsumptionController {
         System.out.println(userEntity.getMoney()-lzConsumption.getMoney());
         userEntity.setMoney(userEntity.getMoney()-lzConsumption.getMoney());
         lzUserService.updateById(userEntity);
+        // 插入消费记录
         lzConsumptionService.save(lzConsumption);
 
         return R.ok();
