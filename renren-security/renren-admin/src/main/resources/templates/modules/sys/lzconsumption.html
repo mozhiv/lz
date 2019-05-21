@@ -2,8 +2,8 @@
 <html>
 <head>
     <title></title>
-		<#include "/header.html">
-</head>
+    <#include "/header.html">
+        </head>
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
@@ -12,15 +12,15 @@
                 <input type="text" class="form-control" @keyup.enter="query" placeholder="请刷卡">
             </div>
             <a class="btn btn-default" @click="query">查询</a>
-			<!--<#if shiro.hasPermission("sys:lzconsumption:save")>
+            <!--<#if shiro.hasPermission("sys:lzconsumption:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("sys:lzconsumption:update")>
+            </#if>
+            <#if shiro.hasPermission("sys:lzconsumption:update")>
             <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("sys:lzconsumption:delete")>
+            </#if>
+            <#if shiro.hasPermission("sys:lzconsumption:delete")>
             <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>-->
+            </#if>-->
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
@@ -29,27 +29,34 @@
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
-														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">卡号</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="lzConsumption.cardNumber" placeholder="卡号"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">消费金额</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="lzConsumption.money" placeholder="消费金额"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">消费时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="lzConsumption.dateTime" placeholder="消费时间"/>
-                        </div>
-                    </div>
-							            <div class="form-group">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">卡号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="lzConsumption.cardNumber" placeholder="卡号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费金额</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="lzConsumption.money" placeholder="消费金额"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="lzConsumption.dateTime" placeholder="消费时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费项目</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="lzConsumption.remarks" placeholder="消费项目"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..." @click="saveOrUpdate" value="确定"/>
+                <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..."
+                       @click="saveOrUpdate" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>

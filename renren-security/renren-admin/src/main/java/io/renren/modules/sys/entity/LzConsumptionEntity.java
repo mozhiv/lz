@@ -36,5 +36,9 @@ public class LzConsumptionEntity implements Serializable {
 	 * 消费时间
 	 */
 	private Date dateTime;
+	/**
+	 * 消费说明
+	 */
+	private String remarks;
 
 }

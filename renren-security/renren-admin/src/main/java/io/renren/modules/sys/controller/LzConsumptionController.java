@@ -1,21 +1,18 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import io.renren.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.renren.modules.sys.entity.LzConsumptionEntity;
-import io.renren.modules.sys.service.LzConsumptionService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.LzConsumptionEntity;
+import io.renren.modules.sys.entity.LzUserEntity;
+import io.renren.modules.sys.service.LzConsumptionService;
+import io.renren.modules.sys.service.LzUserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 
@@ -31,13 +28,18 @@ import io.renren.common.utils.R;
 public class LzConsumptionController {
     @Autowired
     private LzConsumptionService lzConsumptionService;
-
+    @Autowired
+    private LzUserService lzUserService;
     /**
      * 列表
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:lzconsumption:list")
     public R list(@RequestParam Map<String, Object> params){
+        if(params.get("sidx").equals("") || params.get("sidx").toString()==null){
+            params.put("sidx","date_time");
+            params.put("order","desc");
+        }
         PageUtils page = lzConsumptionService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -60,7 +62,14 @@ public class LzConsumptionController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:lzconsumption:save")
+    @Transactional
     public R save(@RequestBody LzConsumptionEntity lzConsumption){
+        // 更新用户余额
+        Long cardNumber = lzConsumption.getCardNumber();
+        LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
+        System.out.println(userEntity.getMoney()-lzConsumption.getMoney());
+        userEntity.setMoney(userEntity.getMoney()-lzConsumption.getMoney());
+        lzUserService.updateById(userEntity);
         lzConsumptionService.save(lzConsumption);
 
         return R.ok();
@@ -69,7 +78,7 @@ public class LzConsumptionController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    /*@RequestMapping("/update")
     @RequiresPermissions("sys:lzconsumption:update")
     public R update(@RequestBody LzConsumptionEntity lzConsumption){
         ValidatorUtils.validateEntity(lzConsumption);
@@ -78,15 +87,15 @@ public class LzConsumptionController {
         return R.ok();
     }
 
-    /**
+    *//**
      * 删除
-     */
+     *//*
     @RequestMapping("/delete")
     @RequiresPermissions("sys:lzconsumption:delete")
     public R delete(@RequestBody Long[] consumptionIds){
         lzConsumptionService.removeByIds(Arrays.asList(consumptionIds));
 
         return R.ok();
-    }
+    }*/
 
 }

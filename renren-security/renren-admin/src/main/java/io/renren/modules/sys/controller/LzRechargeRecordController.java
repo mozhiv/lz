@@ -36,12 +36,12 @@ public class LzRechargeRecordController {
     @RequestMapping("/list")
     @RequiresPermissions("sys:lzrechargerecord:list")
     public R list(@RequestParam Map<String, Object> params){
-        System.out.println(params.get("sidx").toString());
+        //System.out.println(params.get("sidx").toString());
         if(params.get("sidx").equals("") || params.get("sidx").toString()==null){
             params.put("sidx","recharge_date");
             params.put("order","desc");
         }
-        System.out.println("sidx:" + params.get("sidx").toString());
+        //System.out.println("sidx:" + params.get("sidx").toString());
         PageUtils page = lzRechargeRecordService.queryPage(params);
 
         return R.ok().put("page", page);

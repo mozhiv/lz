@@ -64,13 +64,16 @@ var vm = new Vue({
 	    lzUserSearch:{
 	        cardNumber: null,
         },
+        consumptionMoney: 0,
+        consumptionRemarks: null,
         rechargeMoney: 0,
 		showList: true,
         addUser: false,
         addMoney: false,
 		title: null,
 		lzUser: {},
-        lzRecharge: {}
+        lzRecharge: {},
+        lzConsumption: {}
 	},
 	methods: {
 		query: function () {
@@ -117,12 +120,42 @@ var vm = new Vue({
                 });
 			});
 		},
+        consumption: function (event) {
+            $('#btnShopping').button('loading').delay(1000).queue(function() {
+                var url = vm.lzUser.userId == null ? "" : "sys/lzconsumption/save";
+                //console.log(vm.lzUser.userId);
+                vm.lzConsumption.cardNumber = vm.lzUser.cardNumber;
+                vm.lzConsumption.money = vm.consumptionMoney;
+                vm.lzConsumption.remarks = vm.consumptionRemarks;
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.lzConsumption),
+                    success: function(r){
+                        if(r.code === 0){
+                            layer.msg("消费成功", {icon: 1});
+                            vm.reload();
+                            $('#btnShopping').button('reset');
+                            $('#btnShopping').dequeue();
+                            $('#shoppingModal').modal('hide');
+                        }else{
+                            layer.alert(r.msg);
+                            $('#btnShopping').button('reset');
+                            $('#btnShopping').dequeue();
+                            $('#shoppingModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        },
         recharge: function (event) {
             $('#btnRecharge').button('loading').delay(1000).queue(function() {
                 var url = vm.lzUser.userId == null ? "" : "sys/lzrechargerecord/save";
                 //console.log(vm.lzUser.userId);
                 vm.lzRecharge.cardNumber = vm.lzUser.cardNumber;
                 vm.lzRecharge.money = vm.rechargeMoney;
+                vm.lzConsumption.remarks = vm.consumptionRemarks;
                 $.ajax({
                     type: "POST",
                     url: baseURL + url,
@@ -139,6 +172,7 @@ var vm = new Vue({
                             layer.alert(r.msg);
                             $('#btnRecharge').button('reset');
                             $('#btnRecharge').dequeue();
+                            $('#exampleModal').modal('hide');
                         }
                     }
                 });
@@ -178,6 +212,25 @@ var vm = new Vue({
                 vm.lzUser = r.lzUser;
             });
 		},
+        consumptionDialog: function(){
+            var userId = getSelectedRow();
+            if(userId == null){
+                return ;
+            }
+            //alert(userId);
+            $("#shoppingDialog").trigger("click");
+            //vm.rechargeMoney = 0;
+            /*vm.showList = true;
+            vm.addMoney = true;*/
+            vm.title = "会员消费";
+            vm.getInfo(userId);
+            $('#shoppingModal').on('hidden.bs.modal', function (e) {
+                // do something...
+                //alert("模态框关闭了");
+                // 模态框关闭后对数据进行初始化
+                vm.consumptionMoney = 0;
+            })
+        },
         charge: function(){
             var userId = getSelectedRow();
             if(userId == null){

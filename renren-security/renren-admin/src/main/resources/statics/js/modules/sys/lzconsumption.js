@@ -4,9 +4,11 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'consumptionId', name: 'consumptionId', index: 'consumption_id', width: 50, key: true,hidden: true },
-			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 }, 			
+			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 },
+            { label: '消费项目', name: 'remarks', index: 'remarks', width: 80 },
 			{ label: '消费金额', name: 'money', index: 'money', width: 80 }, 			
-			{ label: '消费时间', name: 'dateTime', index: 'date_time', width: 80 }			
+			{ label: '消费时间', name: 'dateTime', index: 'date_time', width: 80 }
+
         ],
 		viewrecords: true,
         height: 385,
