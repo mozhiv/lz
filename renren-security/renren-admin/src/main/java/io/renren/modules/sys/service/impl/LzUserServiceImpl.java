@@ -20,10 +20,16 @@ public class LzUserServiceImpl extends ServiceImpl<LzUserDao, LzUserEntity> impl
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         String cardNumber = (String)params.get("cardNumber");
+        String mobile = (String)params.get("mobile");
+        String name = (String)params.get("name");
+        //System.out.println("mobile:"+mobile);
+        //System.out.println("name:"+name);
         IPage<LzUserEntity> page = this.page(
                 new Query<LzUserEntity>().getPage(params),
                 new QueryWrapper<LzUserEntity>()
                         .like(StringUtils.isNotBlank(cardNumber),"card_number", cardNumber)
+                        .like(StringUtils.isNotBlank(mobile),"mobile",mobile)
+                        .like(StringUtils.isNotBlank(name),"username",name)
         );
 
         return new PageUtils(page);

@@ -68,11 +68,47 @@ public class LzConsumptionController {
         Long cardNumber = lzConsumption.getCardNumber();
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         System.out.println(userEntity.getMoney()-lzConsumption.getMoney());
+        if(userEntity.getMoney()-lzConsumption.getMoney()<0){
+            return R.error("余额不足，请及时充值！");
+        }
         userEntity.setMoney(userEntity.getMoney()-lzConsumption.getMoney());
         lzUserService.updateById(userEntity);
         // 插入消费记录
         lzConsumptionService.save(lzConsumption);
 
+        return R.ok();
+    }
+    @RequestMapping("/updateWashTimes")
+    @RequiresPermissions("sys:lzconsumption:update")
+    public R updateWashTimes(@RequestBody Long cardNumber){
+        System.out.println(cardNumber);
+        // 更新用户洗车次数信息
+        LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
+        userEntity.setWashTimes(userEntity.getWashTimes()-1);
+        lzUserService.updateById(userEntity);
+        // 插入消费记录
+        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
+        lzConsumption.setCardNumber(cardNumber);
+        lzConsumption.setMoney(0f);
+        lzConsumption.setRemarks("【会员】免费洗车次数");
+        lzConsumptionService.save(lzConsumption);
+        return R.ok();
+    }
+
+    @RequestMapping("/updateWaxTimes")
+    @RequiresPermissions("sys:lzconsumption:update")
+    public R updateWaxTimes(@RequestBody Long cardNumber){
+        System.out.println(cardNumber);
+        // 更新用户打蜡次数信息
+        LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
+        userEntity.setWaxTimes(userEntity.getWaxTimes()-1);
+        lzUserService.updateById(userEntity);
+        // 插入消费记录
+        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
+        lzConsumption.setCardNumber(cardNumber);
+        lzConsumption.setMoney(0f);
+        lzConsumption.setRemarks("【会员】免费打蜡次数");
+        lzConsumptionService.save(lzConsumption);
         return R.ok();
     }
 

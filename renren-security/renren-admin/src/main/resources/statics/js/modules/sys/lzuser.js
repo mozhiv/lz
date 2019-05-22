@@ -18,12 +18,12 @@ $(function () {
 			{ label: '洗车次数', name: 'washTimes', index: 'wash_times', width: 80 , formatter: function(value, options, row){
                 return value === 0 ?
                     '<span class="label label-danger">剩余'+ value +'次</span>' :
-                    '<span class="label label-success">剩余'+ value +'次</span>';
+                    '<span class="label label-success">剩余'+ value +'次</span>&nbsp;&nbsp;<a href="javascript:void(0)" style="cursor:hand" onclick="vm.updateWashTimes('+row.cardNumber+')">洗车</a>';
             }},
 			{ label: '打蜡次数', name: 'waxTimes', index: 'wax_times', width: 80, formatter: function(value, options, row){
                 return value === 0 ?
                     '<span class="label label-danger">剩余'+ value +'次</span>' :
-                    '<span class="label label-success">剩余'+ value +'次</span>';
+                    '<span class="label label-success">剩余'+ value +'次</span>&nbsp;&nbsp;<a href="javascript:void(0)" style="cursor:hand" onclick="vm.updateWaxTimes('+row.cardNumber+')">打蜡</a>';
             } },
 			{ label: '性别', name: 'sex', index: 'sex', width: 80,  formatter: function(value, options, row){
                 return value === 0 ?
@@ -63,6 +63,8 @@ var vm = new Vue({
 	data:{
 	    lzUserSearch:{
 	        cardNumber: null,
+            mobile: null,
+            name: null,
         },
         consumptionMoney: 0,
         consumptionRemarks: null,
@@ -123,7 +125,6 @@ var vm = new Vue({
         consumption: function (event) {
             $('#btnShopping').button('loading').delay(1000).queue(function() {
                 var url = vm.lzUser.userId == null ? "" : "sys/lzconsumption/save";
-                //console.log(vm.lzUser.userId);
                 vm.lzConsumption.cardNumber = vm.lzUser.cardNumber;
                 vm.lzConsumption.money = vm.consumptionMoney;
                 vm.lzConsumption.remarks = vm.consumptionRemarks;
@@ -229,6 +230,7 @@ var vm = new Vue({
                 //alert("模态框关闭了");
                 // 模态框关闭后对数据进行初始化
                 vm.consumptionMoney = 0;
+                vm.consumptionRemarks = null;
             })
         },
         charge: function(){
@@ -250,11 +252,53 @@ var vm = new Vue({
                 vm.rechargeMoney = 0;
             })
         },
+        updateWashTimes: function (value) {
+            //console.log(value);
+            confirm('确定洗车？', function () {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: baseURL + "sys/lzconsumption/updateWashTimes",
+                    data: JSON.stringify(value),
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('操作成功', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            })
+        },
+        updateWaxTimes: function (value) {
+            confirm('确定打蜡？', function () {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: baseURL + "sys/lzconsumption/updateWaxTimes",
+                    data: JSON.stringify(value),
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('操作成功', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            })
+        },
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'cardNumber': vm.lzUserSearch.cardNumber},
+                postData:{'cardNumber': vm.lzUserSearch.cardNumber,
+                    'mobile': vm.lzUserSearch.mobile,
+                    'name' : vm.lzUserSearch.name
+                },
                 page:page
             }).trigger("reloadGrid");
 		}
