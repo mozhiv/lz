@@ -8,6 +8,7 @@ import io.renren.common.utils.Query;
 import io.renren.modules.sys.dao.LzConsumptionDao;
 import io.renren.modules.sys.entity.LzConsumptionEntity;
 import io.renren.modules.sys.service.LzConsumptionService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -18,9 +19,11 @@ public class LzConsumptionServiceImpl extends ServiceImpl<LzConsumptionDao, LzCo
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String cardNumber = (String)params.get("cardNumber");
         IPage<LzConsumptionEntity> page = this.page(
                 new Query<LzConsumptionEntity>().getPage(params),
                 new QueryWrapper<LzConsumptionEntity>()
+                        .like(StringUtils.isNotBlank(cardNumber),"card_number", cardNumber)
         );
 
         return new PageUtils(page);

@@ -40,6 +40,9 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        lzUserSearch:{
+            cardNumber: null,
+        },
 		showList: true,
 		title: null,
 		lzConsumption: {}
@@ -123,7 +126,9 @@ var vm = new Vue({
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+                postData:{'cardNumber': vm.lzUserSearch.cardNumber,
+                },
                 page:page
             }).trigger("reloadGrid");
 		}

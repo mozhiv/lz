@@ -8,6 +8,7 @@ import io.renren.common.utils.Query;
 import io.renren.modules.sys.dao.LzRechargeRecordDao;
 import io.renren.modules.sys.entity.LzRechargeRecordEntity;
 import io.renren.modules.sys.service.LzRechargeRecordService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,9 +20,11 @@ public class LzRechargeRecordServiceImpl extends ServiceImpl<LzRechargeRecordDao
     private LzRechargeRecordDao lzRechargeRecordDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String cardNumber = (String)params.get("cardNumber");
         IPage<LzRechargeRecordEntity> page = this.page(
                 new Query<LzRechargeRecordEntity>().getPage(params),
                 new QueryWrapper<LzRechargeRecordEntity>()
+                        .like(StringUtils.isNotBlank(cardNumber),"card_number",cardNumber)
         );
 
         return new PageUtils(page);
