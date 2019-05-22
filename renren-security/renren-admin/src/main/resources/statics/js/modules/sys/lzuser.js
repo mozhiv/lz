@@ -4,28 +4,33 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'userId', name: 'userId', index: 'user_id', width: 50, key: true, hidden: true },
-			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 80 },
-			{ label: '用户名', name: 'username', index: 'username', width: 80 }, 			
-			{ label: '手机号', name: 'mobile', index: 'mobile', width: 80 },
-            { label: '车牌号', name: 'carNumber', index: 'car_number', width: 80 },
-			{ label: '余额', name: 'money', index: 'money', width: 80 },
-			{ label: '状态', name: 'status', index: 'status', width: 80, formatter: function(value, options, row){
+			{ label: '卡号', name: 'cardNumber', index: 'card_number', width: 70 },
+			{ label: '用户名', name: 'username', index: 'username', width: 50 },
+			{ label: '手机号', name: 'mobile', index: 'mobile', width: 60 },
+            { label: '车牌号', name: 'carNumber', index: 'car_number', width: 50 },
+			{ label: '余额', name: 'money', index: 'money', width: 40 },
+			{ label: '状态', name: 'status', index: 'status', width: 40, formatter: function(value, options, row){
                 return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';
             }},
 			{ label: '发卡时间', name: 'createTime', index: 'create_time', width: 80 },
-			{ label: '洗车次数', name: 'washTimes', index: 'wash_times', width: 80 , formatter: function(value, options, row){
+			{ label: '洗车次数', name: 'washTimes', index: 'wash_times', width: 60 , formatter: function(value, options, row){
                 return value === 0 ?
                     '<span class="label label-danger">剩余'+ value +'次</span>' :
                     '<span class="label label-success">剩余'+ value +'次</span>&nbsp;&nbsp;<a href="javascript:void(0)" style="cursor:hand" onclick="vm.updateWashTimes('+row.cardNumber+')">洗车</a>';
             }},
-			{ label: '打蜡次数', name: 'waxTimes', index: 'wax_times', width: 80, formatter: function(value, options, row){
+			{ label: '打蜡次数', name: 'waxTimes', index: 'wax_times', width: 60, formatter: function(value, options, row){
                 return value === 0 ?
                     '<span class="label label-danger">剩余'+ value +'次</span>' :
                     '<span class="label label-success">剩余'+ value +'次</span>&nbsp;&nbsp;<a href="javascript:void(0)" style="cursor:hand" onclick="vm.updateWaxTimes('+row.cardNumber+')">打蜡</a>';
             } },
-			{ label: '性别', name: 'sex', index: 'sex', width: 80,  formatter: function(value, options, row){
+            { label: '消毒次数', name: 'disinfectionTimes', index: 'disinfection_times', width: 60, formatter: function(value, options, row){
+                return value === 0 ?
+                    '<span class="label label-danger">剩余'+ value +'次</span>' :
+                    '<span class="label label-success">剩余'+ value +'次</span>&nbsp;&nbsp;<a href="javascript:void(0)" style="cursor:hand" onclick="vm.updateDisinfectionTimes('+row.cardNumber+')">消毒</a>';
+            } },
+			{ label: '性别', name: 'sex', index: 'sex', width: 50,  formatter: function(value, options, row){
                 return value === 0 ?
                     '女' :
                     '男';
@@ -278,6 +283,25 @@ var vm = new Vue({
                     type: "POST",
                     contentType: "application/json",
                     url: baseURL + "sys/lzconsumption/updateWaxTimes",
+                    data: JSON.stringify(value),
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('操作成功', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            })
+        },
+        updateDisinfectionTimes : function (value) {
+            confirm('确定消毒？', function () {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: baseURL + "sys/lzconsumption/updateDisinfectionTimes",
                     data: JSON.stringify(value),
                     success: function (r) {
                         if (r.code == 0) {

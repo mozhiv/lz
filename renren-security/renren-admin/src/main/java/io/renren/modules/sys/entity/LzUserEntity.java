@@ -61,6 +61,10 @@ public class LzUserEntity implements Serializable {
 	 */
 	private Integer waxTimes;
 	/**
+	 * 消毒次数
+	 */
+	private Integer disinfectionTimes;
+	/**
 	 * 性别，默认'男'  0: '女' 1: '男'
 	 */
 	private Integer sex;

@@ -24,14 +24,14 @@ public class LzRechargeRecordServiceImpl extends ServiceImpl<LzRechargeRecordDao
         IPage<LzRechargeRecordEntity> page = this.page(
                 new Query<LzRechargeRecordEntity>().getPage(params),
                 new QueryWrapper<LzRechargeRecordEntity>()
-                        .like(StringUtils.isNotBlank(cardNumber),"card_number",cardNumber)
+                        .eq(StringUtils.isNotBlank(cardNumber),"card_number",cardNumber)
         );
 
         return new PageUtils(page);
     }
 
-    public void addRechargeRecord(LzRechargeRecordEntity lzRechargeRecordEntity){
+    /*public void addRechargeRecord(LzRechargeRecordEntity lzRechargeRecordEntity){
         lzRechargeRecordDao.insert(lzRechargeRecordEntity);
-    }
+    }*/
 
 }

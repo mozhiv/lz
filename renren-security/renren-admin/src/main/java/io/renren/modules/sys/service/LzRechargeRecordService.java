@@ -17,6 +17,6 @@ public interface LzRechargeRecordService extends IService<LzRechargeRecordEntity
 
     PageUtils queryPage(Map<String, Object> params);
 
-    public void addRechargeRecord(LzRechargeRecordEntity lzRechargeRecordEntity);
+    //public void addRechargeRecord(LzRechargeRecordEntity lzRechargeRecordEntity);
 }
 

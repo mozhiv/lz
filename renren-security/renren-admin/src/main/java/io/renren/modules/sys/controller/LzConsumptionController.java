@@ -112,6 +112,23 @@ public class LzConsumptionController {
         return R.ok();
     }
 
+    @RequestMapping("/updateDisinfectionTimes")
+    @RequiresPermissions("sys:lzconsumption:update")
+    public R updateDisinfectionTimes(@RequestBody Long cardNumber){
+        System.out.println(cardNumber);
+        // 更新用户消毒次数信息
+        LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
+        userEntity.setDisinfectionTimes(userEntity.getDisinfectionTimes()-1);
+        lzUserService.updateById(userEntity);
+        // 插入消费记录
+        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
+        lzConsumption.setCardNumber(cardNumber);
+        lzConsumption.setMoney(0f);
+        lzConsumption.setRemarks("【会员】免费消毒次数");
+        lzConsumptionService.save(lzConsumption);
+        return R.ok();
+    }
+
     /**
      * 修改
      */
