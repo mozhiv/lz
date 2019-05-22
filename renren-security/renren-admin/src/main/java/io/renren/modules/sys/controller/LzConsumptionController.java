@@ -74,6 +74,7 @@ public class LzConsumptionController {
         userEntity.setMoney(userEntity.getMoney()-lzConsumption.getMoney());
         lzUserService.updateById(userEntity);
         // 插入消费记录
+        lzConsumption.setRemarks("【会员】：[" + userEntity.getUsername() + "]："+lzConsumption.getRemarks());
         lzConsumptionService.save(lzConsumption);
 
         return R.ok();
@@ -90,7 +91,7 @@ public class LzConsumptionController {
         LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
         lzConsumption.setCardNumber(cardNumber);
         lzConsumption.setMoney(0f);
-        lzConsumption.setRemarks("【会员】免费洗车次数");
+        lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费洗车次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
     }
@@ -107,7 +108,7 @@ public class LzConsumptionController {
         LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
         lzConsumption.setCardNumber(cardNumber);
         lzConsumption.setMoney(0f);
-        lzConsumption.setRemarks("【会员】免费打蜡次数");
+        lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费打蜡次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
     }
@@ -115,7 +116,7 @@ public class LzConsumptionController {
     @RequestMapping("/updateDisinfectionTimes")
     @RequiresPermissions("sys:lzconsumption:update")
     public R updateDisinfectionTimes(@RequestBody Long cardNumber){
-        System.out.println(cardNumber);
+        //System.out.println(cardNumber);
         // 更新用户消毒次数信息
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         userEntity.setDisinfectionTimes(userEntity.getDisinfectionTimes()-1);
@@ -124,7 +125,7 @@ public class LzConsumptionController {
         LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
         lzConsumption.setCardNumber(cardNumber);
         lzConsumption.setMoney(0f);
-        lzConsumption.setRemarks("【会员】免费消毒次数");
+        lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费消毒次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
     }

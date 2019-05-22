@@ -55,6 +55,9 @@ public class LzUserController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:lzuser:save")
     public R save(@RequestBody LzUserEntity lzUser){
+        System.out.println("转换前"+lzUser.getCarNumber().toUpperCase());
+        lzUser.setCarNumber(lzUser.getCarNumber().toUpperCase());
+        System.out.println("转换后"+lzUser.getCarNumber());
         lzUserService.save(lzUser);
 
         return R.ok();
