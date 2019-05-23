@@ -24,7 +24,7 @@ public class LzRechargeRecordServiceImpl extends ServiceImpl<LzRechargeRecordDao
         IPage<LzRechargeRecordEntity> page = this.page(
                 new Query<LzRechargeRecordEntity>().getPage(params),
                 new QueryWrapper<LzRechargeRecordEntity>()
-                        .eq(StringUtils.isNotBlank(cardNumber),"card_number",cardNumber)
+                        .like(StringUtils.isNotBlank(cardNumber),"card_number",cardNumber)
         );
 
         return new PageUtils(page);

@@ -23,7 +23,7 @@ public class LzConsumptionServiceImpl extends ServiceImpl<LzConsumptionDao, LzCo
         IPage<LzConsumptionEntity> page = this.page(
                 new Query<LzConsumptionEntity>().getPage(params),
                 new QueryWrapper<LzConsumptionEntity>()
-                        .eq(StringUtils.isNotBlank(cardNumber),"card_number", cardNumber)
+                        .like(StringUtils.isNotBlank(cardNumber),"card_number", cardNumber)
         );
 
         return new PageUtils(page);
