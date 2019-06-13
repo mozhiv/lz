@@ -64,10 +64,11 @@ public class LzConsumptionController {
     @RequiresPermissions("sys:lzconsumption:save")
     @Transactional
     public R save(@RequestBody LzConsumptionEntity lzConsumption){
+        //System.out.println("Before:"+lzConsumption.getMoney());
         // 更新用户余额
         Long cardNumber = lzConsumption.getCardNumber();
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
-        System.out.println(userEntity.getMoney()-lzConsumption.getMoney());
+        //System.out.println("After"+(userEntity.getMoney()-lzConsumption.getMoney()));
         if(userEntity.getMoney()-lzConsumption.getMoney()<0){
             return R.error("余额不足，请及时充值！");
         }
