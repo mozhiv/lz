@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -31,7 +32,7 @@ public class LzRechargeRecordEntity implements Serializable {
 	/**
 	 * 充值金额
 	 */
-	private Float money;
+	private BigDecimal money;
 	/**
 	 * 充值时间
 	 */

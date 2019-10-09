@@ -10,9 +10,18 @@ $(function () {
             { label: '车牌号', name: 'carNumber', index: 'car_number', width: 50 },
 			{ label: '余额', name: 'money', index: 'money', width: 40 },
 			{ label: '状态', name: 'status', index: 'status', width: 40, formatter: function(value, options, row){
-                return value === 0 ?
+			    if(value === 0){
+			        return '<span class="label label-danger">禁用</span>';
+                }else if(value === 1){
+			        return '<span class="label label-success">正常</span>';
+                }else if(value === 2){
+                    return '<span class="label label-warning">年费</span>';
+                }else{
+                    return '<span class="label label-default">过期</span>';
+                }
+                /*return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
-                    '<span class="label label-success">正常</span>';
+                    '<span class="label label-success">正常</span>';*/
             }},
 			{ label: '发卡时间', name: 'createTime', index: 'create_time', width: 80 },
 			{ label: '洗车次数', name: 'washTimes', index: 'wash_times', width: 60 , formatter: function(value, options, row){

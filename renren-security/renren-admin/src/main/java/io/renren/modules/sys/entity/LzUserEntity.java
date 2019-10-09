@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -43,7 +44,7 @@ public class LzUserEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Float money;
+	private BigDecimal money;
 	/**
 	 * 状态  0：禁用   1：正常
 	 */

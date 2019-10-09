@@ -9,6 +9,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Map;
 
 
@@ -55,9 +56,9 @@ public class LzUserController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:lzuser:save")
     public R save(@RequestBody LzUserEntity lzUser){
-        System.out.println("转换前"+lzUser.getCarNumber().toUpperCase());
+        //System.out.println("转换前"+lzUser.getCarNumber().toUpperCase());
         lzUser.setCarNumber(lzUser.getCarNumber().toUpperCase());
-        System.out.println("转换后"+lzUser.getCarNumber());
+        //System.out.println("转换后"+lzUser.getCarNumber());
         lzUserService.save(lzUser);
 
         return R.ok();
@@ -70,6 +71,14 @@ public class LzUserController {
     @RequiresPermissions("sys:lzuser:update")
     public R update(@RequestBody LzUserEntity lzUser){
         ValidatorUtils.validateEntity(lzUser);
+        LzUserEntity lz = lzUserService.getById(lzUser.getUserId());
+        //如果之前非年费会员，现在要修改为年费会员，则更新发卡时间为当前日期
+        if(lzUser.getStatus() == 2){
+            if (lz.getStatus() != lzUser.getStatus()){
+                Date date = new Date();
+                lzUser.setCreateTime(date);
+            }
+        }
         lzUserService.updateById(lzUser);
         
         return R.ok();

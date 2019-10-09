@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -69,10 +70,11 @@ public class LzConsumptionController {
         Long cardNumber = lzConsumption.getCardNumber();
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         //System.out.println("After"+(userEntity.getMoney()-lzConsumption.getMoney()));
-        if(userEntity.getMoney()-lzConsumption.getMoney()<0){
+        BigDecimal money = userEntity.getMoney();
+        if(money.compareTo(lzConsumption.getMoney()) == -1){
             return R.error("余额不足，请及时充值！");
         }
-        userEntity.setMoney(userEntity.getMoney()-lzConsumption.getMoney());
+        userEntity.setMoney(money.subtract(lzConsumption.getMoney()));
         lzUserService.updateById(userEntity);
         // 插入消费记录
         lzConsumption.setRemarks("【会员】：[" + userEntity.getUsername() + "]："+lzConsumption.getRemarks());
@@ -82,16 +84,14 @@ public class LzConsumptionController {
     }
     @RequestMapping("/updateWashTimes")
     @RequiresPermissions("sys:lzconsumption:update")
+    @Transactional
     public R updateWashTimes(@RequestBody Long cardNumber){
-        System.out.println(cardNumber);
         // 更新用户洗车次数信息
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         userEntity.setWashTimes(userEntity.getWashTimes()-1);
         lzUserService.updateById(userEntity);
         // 插入消费记录
-        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
-        lzConsumption.setCardNumber(cardNumber);
-        lzConsumption.setMoney(0f);
+        LzConsumptionEntity lzConsumption = commonConsumptionCode(cardNumber);
         lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费洗车次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
@@ -99,16 +99,14 @@ public class LzConsumptionController {
 
     @RequestMapping("/updateWaxTimes")
     @RequiresPermissions("sys:lzconsumption:update")
+    @Transactional
     public R updateWaxTimes(@RequestBody Long cardNumber){
-        System.out.println(cardNumber);
         // 更新用户打蜡次数信息
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         userEntity.setWaxTimes(userEntity.getWaxTimes()-1);
         lzUserService.updateById(userEntity);
         // 插入消费记录
-        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
-        lzConsumption.setCardNumber(cardNumber);
-        lzConsumption.setMoney(0f);
+        LzConsumptionEntity lzConsumption = commonConsumptionCode(cardNumber);
         lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费打蜡次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
@@ -116,19 +114,29 @@ public class LzConsumptionController {
 
     @RequestMapping("/updateDisinfectionTimes")
     @RequiresPermissions("sys:lzconsumption:update")
+    @Transactional
     public R updateDisinfectionTimes(@RequestBody Long cardNumber){
-        //System.out.println(cardNumber);
         // 更新用户消毒次数信息
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
         userEntity.setDisinfectionTimes(userEntity.getDisinfectionTimes()-1);
         lzUserService.updateById(userEntity);
         // 插入消费记录
-        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
-        lzConsumption.setCardNumber(cardNumber);
-        lzConsumption.setMoney(0f);
+        LzConsumptionEntity lzConsumption = commonConsumptionCode(cardNumber);
         lzConsumption.setRemarks("【会员】：["+userEntity.getUsername()+"]：免费消毒次数");
         lzConsumptionService.save(lzConsumption);
         return R.ok();
+    }
+
+    /**
+     * 公共消费代码
+     * @param cardNumber
+     * @return 消费实体对象
+     */
+    public LzConsumptionEntity commonConsumptionCode(Long cardNumber){
+        LzConsumptionEntity lzConsumption = new LzConsumptionEntity();
+        lzConsumption.setCardNumber(cardNumber);
+        lzConsumption.setMoney(new BigDecimal("0"));
+        return lzConsumption;
     }
 
     /**

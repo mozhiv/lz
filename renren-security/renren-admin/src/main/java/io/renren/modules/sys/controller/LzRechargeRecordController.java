@@ -69,7 +69,8 @@ public class LzRechargeRecordController {
         // 更新用户余额
         Long cardNumber = lzRechargeRecord.getCardNumber();
         LzUserEntity userEntity = lzUserService.getOne(new QueryWrapper<LzUserEntity>().eq("card_number",cardNumber));
-        userEntity.setMoney(userEntity.getMoney()+lzRechargeRecord.getMoney());
+        //userEntity.setMoney(userEntity.getMoney()+lzRechargeRecord.getMoney());
+        userEntity.setMoney(userEntity.getMoney().add(lzRechargeRecord.getMoney()));
         lzUserService.updateById(userEntity);
         // 插入充值记录
         lzRechargeRecordService.save(lzRechargeRecord);
